@@ -19,10 +19,9 @@ public class ProductService {
     IProductRepository iProductRepository;
 
     @Transactional
-    public Product addProduct(Product product){
+    public Product saveProduct( Product product){
       return iProductRepository.save(product);
     }
-
 
     public Product findById( Integer id ) {
         return iProductRepository.findById(id).get();

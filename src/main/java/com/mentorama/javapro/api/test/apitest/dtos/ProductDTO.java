@@ -11,8 +11,13 @@ import lombok.Setter;
 @Setter
 public class ProductDTO {
 
+    private Integer id;
     private String productName;
     private Integer quantity;
     private Double price;
+
+    private boolean permiteCadastrarMesmaDescricao;
+
+
 
 }

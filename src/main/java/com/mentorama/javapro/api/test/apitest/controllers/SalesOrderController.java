@@ -16,10 +16,8 @@ public class SalesOrderController {
 
     @PostMapping
     public SalesOrderRetorno sellProducts ( @RequestBody SalesOrder salesOrder) throws OutOfStockException {
-        SalesOrder order = sevice.sellProducts(salesOrder);
+        SalesOrderRetorno retorno = sevice.sellProducts(salesOrder);
 
-        SalesOrderRetorno retorno = new SalesOrderRetorno();
-        retorno.setSalesOrder(order);
         return retorno;
     }
 }

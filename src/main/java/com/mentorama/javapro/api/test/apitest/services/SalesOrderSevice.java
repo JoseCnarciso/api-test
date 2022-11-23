@@ -1,5 +1,6 @@
 package com.mentorama.javapro.api.test.apitest.services;
 
+import com.mentorama.javapro.api.test.apitest.dtos.SalesOrderRetorno;
 import com.mentorama.javapro.api.test.apitest.exceptions.OutOfStockException;
 import com.mentorama.javapro.api.test.apitest.models.Product;
 import com.mentorama.javapro.api.test.apitest.models.SalesOrder;
@@ -26,21 +27,41 @@ public class SalesOrderSevice {
     @Autowired
     ISaleOrderRepository iSaleOrderRepository;
 
+
     @Transactional
-    public SalesOrder sellProducts( SalesOrder salesFinalPrice ) throws OutOfStockException {
+    public SalesOrderRetorno sellProducts( SalesOrder salesFinalPrice ) throws OutOfStockException {
+
+        SalesOrderRetorno orderRetorno = new SalesOrderRetorno();
+
+        int totalQuantidade = 0;
+        double totaldesconto = 0;
 
         // Faz uma lista para adicionar mais de um item vendido no ped
         for (SalesOrderItem item : salesFinalPrice.getItems()) {
+
             // valida desconto e quantidade
             setFinalDiscount(item);
             setQuanityProduct(item);
 
+            totalQuantidade = totalQuantidade + item.getQuantity();
+
             Double finalPrice = finalPrice(item);
+
             item.setFinalPrice(finalPrice);
+
+            double precoOriginal= iProductRepository.findById(item.getProductId()).get().getPrice();
+            double desconto = precoOriginal - finalPrice;
+            totaldesconto += desconto;
+
         }
+
         iSaleOrderRepository.save(salesFinalPrice);
 
-        return salesFinalPrice;
+        orderRetorno.setSalesOrder(salesFinalPrice);
+        orderRetorno.setTotalDeitens(totalQuantidade);
+        orderRetorno.setTotalDeDescontos(totaldesconto);
+
+        return orderRetorno;
     }
 
     public void setFinalDiscount( SalesOrderItem salesOrder ) {
