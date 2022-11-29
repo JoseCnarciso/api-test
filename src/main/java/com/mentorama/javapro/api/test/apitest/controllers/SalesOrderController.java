@@ -17,7 +17,6 @@ public class SalesOrderController {
     @PostMapping
     public SalesOrderRetorno sellProducts ( @RequestBody SalesOrder salesOrder) throws OutOfStockException {
         SalesOrderRetorno retorno = sevice.sellProducts(salesOrder);
-
         return retorno;
     }
 }

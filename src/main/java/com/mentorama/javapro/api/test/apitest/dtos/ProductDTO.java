@@ -1,14 +1,12 @@
 package com.mentorama.javapro.api.test.apitest.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Data
 public class ProductDTO {
 
     private Integer id;
@@ -16,7 +14,6 @@ public class ProductDTO {
     private Integer quantity;
     private Double price;
 
-    private boolean permiteCadastrarMesmaDescricao;
 
 
 

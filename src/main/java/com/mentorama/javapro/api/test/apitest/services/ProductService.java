@@ -24,6 +24,7 @@ public class ProductService {
     }
 
     public Product findById( Integer id ) {
+
         return iProductRepository.findById(id).get();
     }
 
@@ -35,7 +36,4 @@ public class ProductService {
     public void delete( Integer id ) {
         iProductRepository.deleteById(id);
     }
-
-
-
 }
