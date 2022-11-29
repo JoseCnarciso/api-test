@@ -1,8 +1,10 @@
 package com.mentorama.javapro.api.test.apitest.services;
 
 import com.mentorama.javapro.api.test.apitest.dtos.ProductDTO;
+import com.mentorama.javapro.api.test.apitest.exceptions.ProductNotFoundException;
 import com.mentorama.javapro.api.test.apitest.models.Product;
 import com.mentorama.javapro.api.test.apitest.repositories.IProductRepository;
+import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +59,18 @@ class ProductServiceTest {
         assertEquals(QUANTITY,response.getQuantity());
         assertEquals(PRICE,response.getPrice());
         assertEquals(MAX_DISCOUNT,response.getMaxDiscount());
+    }
 
+
+    @Test
+    void produtoNaoEncontrado(){
+        when(repository.findById(anyInt())).thenThrow(new ProductNotFoundException("Produto não encontrado"));
+        try{
+            service.findById(ID);
+        }catch (Exception e){
+            assertEquals(ProductNotFoundException.class,e.getClass());
+            assertEquals("Produto não encontrado",e.getMessage());
+        }
     }
 
     @Test
@@ -72,6 +85,7 @@ class ProductServiceTest {
     private void startProduct() {
         product = new Product(ID, PRODUCT_NAME, QUANTITY, MAX_DISCOUNT, PRICE);
         dto = new ProductDTO(ID, PRODUCT_NAME, QUANTITY, PRICE);
+
     }
 
 

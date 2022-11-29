@@ -1,5 +1,6 @@
 package com.mentorama.javapro.api.test.apitest.services;
 
+import com.mentorama.javapro.api.test.apitest.exceptions.ProductNotFoundException;
 import com.mentorama.javapro.api.test.apitest.models.Product;
 
 import com.mentorama.javapro.api.test.apitest.repositories.IProductRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -25,7 +27,9 @@ public class ProductService {
 
     public Product findById( Integer id ) {
 
-        return iProductRepository.findById(id).get();
+        Optional<Product> product = iProductRepository.findById(id);
+        return product.orElseThrow(()-> new ProductNotFoundException("Produto não encontrado"));
+
     }
 
     public List<Product> findAll() {
