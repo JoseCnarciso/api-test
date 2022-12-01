@@ -7,10 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -49,7 +51,13 @@ class ProductControllerTest {
     }
 
     @Test
-    void findAll() {
+    void listandoTodosOsProdutosCadastrados() {
+        when(service.findAll()).thenReturn(List.of(product));
+
+        List<Product> response = controller.findAll();
+        assertNotNull(response);
+
+
     }
 
     @Test
