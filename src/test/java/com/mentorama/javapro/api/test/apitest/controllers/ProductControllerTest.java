@@ -6,10 +6,16 @@ import com.mentorama.javapro.api.test.apitest.services.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
 class ProductControllerTest {
 
@@ -24,7 +30,7 @@ class ProductControllerTest {
 
     @InjectMocks
     private ProductController controller;
-    @InjectMocks
+    @Mock
     private ProductService service;
 
 
@@ -47,7 +53,23 @@ class ProductControllerTest {
     }
 
     @Test
-    void findById() {
+    void procurandoProdutoPorID() {
+
+        when(service.findById(anyInt())).thenReturn(product);
+        ResponseEntity<Product> response = controller.findById(ID);
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(ResponseEntity.class,response.getClass());
+        assertEquals(Product.class,response.getBody().getClass());
+
+        assertEquals(ID,response.getBody().getId());
+        assertEquals(PRODUCT_NAME,response.getBody().getProductName());
+        assertEquals(PRICE,response.getBody().getPrice());
+        assertEquals(MAX_DISCOUNT,response.getBody().getMaxDiscount());
+        assertEquals(QUANTITY,response.getBody().getQuantity());
+
+
+
     }
 
     @Test
