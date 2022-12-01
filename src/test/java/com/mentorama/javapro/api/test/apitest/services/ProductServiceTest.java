@@ -62,6 +62,7 @@ class ProductServiceTest {
         assertEquals(PRICE, response.getPrice());
         assertEquals(MAX_DISCOUNT, response.getMaxDiscount());
     }
+
     @Test
     void cadastrandoProdutoComErroException() {
 
@@ -75,6 +76,36 @@ class ProductServiceTest {
            assertEquals(DataIntegrityViolationException.class,ex.getClass());
        }
     }
+
+    @Test
+    void atualizandoCadastroDeProduto() {
+
+        when(repository.save(any())).thenReturn(product);
+
+        Product response = service.update(product);
+
+        assertNotNull(response);
+        assertEquals(Product.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(PRODUCT_NAME, response.getProductName());
+        assertEquals(QUANTITY, response.getQuantity());
+        assertEquals(PRICE, response.getPrice());
+        assertEquals(MAX_DISCOUNT, response.getMaxDiscount());
+    }
+
+    @Test
+    void atualizandoProdutoComErroException() {
+
+        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(product));
+
+        try {
+            Optional.ofNullable(product).get().setId(1);
+            service.saveProduct(product);
+        }catch (Exception ex){
+            assertEquals(DataIntegrityViolationException.class,ex.getClass());
+        }
+    }
+
 
     @Test
     void procurandoPorID() {

@@ -1,5 +1,6 @@
 package com.mentorama.javapro.api.test.apitest.services;
 
+import com.mentorama.javapro.api.test.apitest.dtos.ProductDTO;
 import com.mentorama.javapro.api.test.apitest.exceptions.ProductNotFoundException;
 import com.mentorama.javapro.api.test.apitest.models.Product;
 
@@ -34,6 +35,11 @@ public class ProductService {
 
     public List<Product> findAll() {
         return iProductRepository.findAll();
+    }
+
+    @Transactional
+    public Product update( Product product){
+        return iProductRepository.save(product);
     }
 
     @Transactional
