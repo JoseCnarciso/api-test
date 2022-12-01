@@ -12,10 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -38,43 +41,80 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
+
         MockitoAnnotations.openMocks(this);
         startProduct();
     }
 
 
     @Test
-    void saveProduct() {
+    void cadastrandoProduto() {
+
+        when(repository.save(any())).thenReturn(product);
+
+        Product response = service.saveProduct(product);
+
+        assertNotNull(response);
+        assertEquals(Product.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(PRODUCT_NAME, response.getProductName());
+        assertEquals(QUANTITY, response.getQuantity());
+        assertEquals(PRICE, response.getPrice());
+        assertEquals(MAX_DISCOUNT, response.getMaxDiscount());
+    }
+    @Test
+    void cadastrandoProdutoComErroException() {
+
+        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(product));
+
+
+       try {
+           Optional.ofNullable(product).get().setId(1);
+           service.saveProduct(product);
+       }catch (Exception ex){
+           assertEquals(DataIntegrityViolationException.class,ex.getClass());
+       }
     }
 
     @Test
-    void findById() {
+    void procurandoPorID() {
         when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(product));
         Product response = service.findById(ID);
 
         assertNotNull(response);
-        assertEquals(product.getId(),response.getId());
-        assertEquals(ID,response.getId());
+        assertEquals(product.getId(), response.getId());
+        assertEquals(ID, response.getId());
         assertEquals(PRODUCT_NAME, response.getProductName());
-        assertEquals(QUANTITY,response.getQuantity());
-        assertEquals(PRICE,response.getPrice());
-        assertEquals(MAX_DISCOUNT,response.getMaxDiscount());
+        assertEquals(QUANTITY, response.getQuantity());
+        assertEquals(PRICE, response.getPrice());
+        assertEquals(MAX_DISCOUNT, response.getMaxDiscount());
     }
 
 
     @Test
-    void produtoNaoEncontrado(){
+    void produtoNaoEncontrado() {
         when(repository.findById(anyInt())).thenThrow(new ProductNotFoundException("Produto não encontrado"));
-        try{
+        try {
             service.findById(ID);
-        }catch (Exception e){
-            assertEquals(ProductNotFoundException.class,e.getClass());
-            assertEquals("Produto não encontrado",e.getMessage());
+        } catch (Exception e) {
+            assertEquals(ProductNotFoundException.class, e.getClass());
+            assertEquals("Produto não encontrado", e.getMessage());
         }
     }
 
     @Test
-    void findAll() {
+    void listandoTodosProdutosCadastrados() {
+        when(repository.findAll()).thenReturn(List.of(product));
+        List<Product> response = service.findAll();
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(Product.class, response.get(0).getClass());
+
+        assertEquals(ID, response.get(0).getId());
+        assertEquals(PRODUCT_NAME, response.get(0).getProductName());
+        assertEquals(QUANTITY, response.get(0).getQuantity());
+        assertEquals(PRICE, response.get(0).getPrice());
+        assertEquals(MAX_DISCOUNT, response.get(0).getMaxDiscount());
     }
 
     @Test
