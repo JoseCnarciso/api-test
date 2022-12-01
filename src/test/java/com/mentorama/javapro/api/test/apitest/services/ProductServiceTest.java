@@ -4,12 +4,11 @@ import com.mentorama.javapro.api.test.apitest.dtos.ProductDTO;
 import com.mentorama.javapro.api.test.apitest.exceptions.ProductNotFoundException;
 import com.mentorama.javapro.api.test.apitest.models.Product;
 import com.mentorama.javapro.api.test.apitest.repositories.IProductRepository;
-import org.hibernate.ObjectNotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -150,6 +150,22 @@ class ProductServiceTest {
 
     @Test
     void delete() {
+       when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(product));
+       doNothing().when(repository).deleteById(anyInt());
+        service.delete(ID);
+        verify(repository,times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    void deleteProdutoNotFoundException(){
+        when(repository.findById(anyInt()))
+                .thenThrow(new ProductNotFoundException("Produto não encontrado"));
+        try {
+            service.delete(ID);
+        }catch (Exception ex){
+            assertEquals(ProductNotFoundException.class,ex.getClass());
+
+        }
     }
 
 

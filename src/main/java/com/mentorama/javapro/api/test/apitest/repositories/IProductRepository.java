@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 public interface IProductRepository extends JpaRepository<Product,Integer> {
 
 
-    //Product findAllById( Integer id );
 }
